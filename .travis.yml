@@ -29,7 +29,6 @@ script:
 - yarn build
 - yarn package
 before_deploy:
-- ls $PATH
 - ls dist
 - if [[ "$NODE_ENV" == "dev" ]]; then mv dist/$(ls dist) dist/mock-$(ls dist); fi
 - export APP_PKG_DIR="$(ls dist)";
