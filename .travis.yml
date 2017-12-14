@@ -3,10 +3,9 @@ dist: trusty
 os:
 - osx
 - linux
-global:
-  env:
-    secure: E7PzJv0w5NwpZ7WCxHuhPzqty1QVzR+kZ6PoZ2OODgPfyiAE+z/hIiN77GtaKFH1q1+jOLuVJwwGnTlcKuLVaxcmN0YGocWu+07opV7srfR7U/4G6PeBHke6wTwGRvdDgNZ6G/xoTNcYoJDTfeYRRyaf1lACoenGQEqHKCA3a7oL0oI1UOGUAvDbtiqNPwbDm2gqwT/TGXzIc1LIZrFm+DGfjq1Ngelz5+RgknatXDMLH3JZOkLdB3QCVmU/03ouHjcHgQuApsUk9Dkh+bbXvmdUyVnoEmV7DKcc0CrcSiDygIhcdEMD6C2eXoHBpfoGzXmLecOeUm0se2a35CdhJeUSbMOVh2kfq+0uexCqMq3K4xWH2TD7p2cshjf/nrk2YVkeYTmiTP0HfzEuWurZh+310M1MITjlfBmgzPvzTqPMDZKPqpKIYcTiJbyt2olFnL3Yhgo5Thayhb+DTumVsuJQZpOufRD0R/shNzojw9OSOZSzeRnS6fh5UL+P4kNNOXxm6lp7NQzJXyHLifErfA+DkJb/QtCLoAdSzf5iDifBZu9vPX2Sgl+Q5aGoywtulVk1HfckGgwcDtQLM4zoHuVg1TT2a/dfoFW1FSFQrd2AEEa8B9uQSOSyXjdJoTBUN+6TF3Zc0xhd2NOBc20EWUEXSgMgLtUwvc0dtFn0OXE=
 env:
+  global:
+    - secure: E7PzJv0w5NwpZ7WCxHuhPzqty1QVzR+kZ6PoZ2OODgPfyiAE+z/hIiN77GtaKFH1q1+jOLuVJwwGnTlcKuLVaxcmN0YGocWu+07opV7srfR7U/4G6PeBHke6wTwGRvdDgNZ6G/xoTNcYoJDTfeYRRyaf1lACoenGQEqHKCA3a7oL0oI1UOGUAvDbtiqNPwbDm2gqwT/TGXzIc1LIZrFm+DGfjq1Ngelz5+RgknatXDMLH3JZOkLdB3QCVmU/03ouHjcHgQuApsUk9Dkh+bbXvmdUyVnoEmV7DKcc0CrcSiDygIhcdEMD6C2eXoHBpfoGzXmLecOeUm0se2a35CdhJeUSbMOVh2kfq+0uexCqMq3K4xWH2TD7p2cshjf/nrk2YVkeYTmiTP0HfzEuWurZh+310M1MITjlfBmgzPvzTqPMDZKPqpKIYcTiJbyt2olFnL3Yhgo5Thayhb+DTumVsuJQZpOufRD0R/shNzojw9OSOZSzeRnS6fh5UL+P4kNNOXxm6lp7NQzJXyHLifErfA+DkJb/QtCLoAdSzf5iDifBZu9vPX2Sgl+Q5aGoywtulVk1HfckGgwcDtQLM4zoHuVg1TT2a/dfoFW1FSFQrd2AEEa8B9uQSOSyXjdJoTBUN+6TF3Zc0xhd2NOBc20EWUEXSgMgLtUwvc0dtFn0OXE=
   matrix:
   - NODE_ENV=dev
   - NODE_ENV=prod
@@ -37,18 +36,17 @@ before_deploy:
   fi
 - echo $OUTPUT_PATH
 - echo $GITHUB_TOKEN
-- if [[ "$NODE_ENV" == "prod" ]]; 
+- if [[ "$NODE_ENV" == "prod" ]]; then
   TOKEN="$GITHUB_TOKEN"
   OWNER="MaidSafe"
   REPO="release_config"
   PATH="safe_authenticator/safe_browser.crust.config"
   FILE="https://api.github.com/repos/$OWNER/$REPO/contents/$PATH"
 
-  curl --header 'Authorization: token $TOKEN' \
-       --header 'Accept: application/vnd.github.v3.raw' \
-       --remote-name \
-       --location $FILE
-       --output $OUTPUT_PATH fi
+  curl --header 'Authorization:token $TOKEN' \
+       --header 'Accept:application/vnd.github.v3.raw' \
+       --location $FILE \
+       --output $OUTPUT_PATH; fi
 - if [[ "$NODE_ENV" == "dev" ]] && [[ "$TRAVIS_OS_NAME" == "osx"  ]]; then rm -f dist/$APP_PKG_DIR/'SAFE
   Browser.app'/Contents/Resources/'SAFE Browser.crust.config'; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cp build/log.toml dist/$APP_PKG_DIR/;
