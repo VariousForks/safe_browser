@@ -35,7 +35,7 @@ build_script:
 
 after_build:
   - ps: >-
-      Get-ChildItem Env:
+      Get-ChildItem Env:auth_token
   - FOR /F %%i IN ('dir dist /b') DO SET APP_PKG_DIR=%%i
   - if [%NODE_ENV%]==[dev] (
       ren .\dist\%APP_PKG_DIR% mock-%APP_PKG_DIR%

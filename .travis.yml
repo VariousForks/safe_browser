@@ -4,11 +4,11 @@ os:
 - osx
 - linux
 env:
-  auth_token:
-  - secure: E7PzJv0w5NwpZ7WCxHuhPzqty1QVzR+kZ6PoZ2OODgPfyiAE+z/hIiN77GtaKFH1q1+jOLuVJwwGnTlcKuLVaxcmN0YGocWu+07opV7srfR7U/4G6PeBHke6wTwGRvdDgNZ6G/xoTNcYoJDTfeYRRyaf1lACoenGQEqHKCA3a7oL0oI1UOGUAvDbtiqNPwbDm2gqwT/TGXzIc1LIZrFm+DGfjq1Ngelz5+RgknatXDMLH3JZOkLdB3QCVmU/03ouHjcHgQuApsUk9Dkh+bbXvmdUyVnoEmV7DKcc0CrcSiDygIhcdEMD6C2eXoHBpfoGzXmLecOeUm0se2a35CdhJeUSbMOVh2kfq+0uexCqMq3K4xWH2TD7p2cshjf/nrk2YVkeYTmiTP0HfzEuWurZh+310M1MITjlfBmgzPvzTqPMDZKPqpKIYcTiJbyt2olFnL3Yhgo5Thayhb+DTumVsuJQZpOufRD0R/shNzojw9OSOZSzeRnS6fh5UL+P4kNNOXxm6lp7NQzJXyHLifErfA+DkJb/QtCLoAdSzf5iDifBZu9vPX2Sgl+Q5aGoywtulVk1HfckGgwcDtQLM4zoHuVg1TT2a/dfoFW1FSFQrd2AEEa8B9uQSOSyXjdJoTBUN+6TF3Zc0xhd2NOBc20EWUEXSgMgLtUwvc0dtFn0OXE=
   matrix:
   - NODE_ENV=dev
   - NODE_ENV=prod
+  global:
+    secure: Ec2Q23NsZg4KCvfUgXLVCbthQ9zflnR/tkinPh/49YxoBErTGCBCUMRPOfcNwSsewZywdxqMc70iLK4hQH8n3413VoC3dY2CKBxMNMCv2QG29+qUZ/QbBHzdkWHF1zg8WMz4iPksZm1gN8syQ0NU8NwM5uKI0KqyVOn6uJq45oJNd3lycz9WQYb96utyIweJ2lCugEfmtq0m/FdItYi44yuPIL8aHsGXNEpxVmcaa+efzQ2xVlvwgUTKLBgCtWX1q6ynzs/C8vV4+T1Eao5KI4qNaZpB/Oh0lu5lvJ+FVMDtP0KhmEWMmO6rQleFNujDFI6JXcTg2WZ/WEPfCjI9NaDGWut1yBxeGRURHOFBBC+YrIYfgvMHfA86XgI0ewBXNLp7TKME46NEAIvOh3wwWUWismPDrMaVO9DRIzFvN1ypfnzlpABLC99hXjIIKD5KKbvn5ltxmEJAJywI5MPazEjsFUGiqb2MoHyorHOWDOvL4dQGVUCUvgMuwmN6EA8r/ZlFsymYBcIWieUAm2JZNIfEX0SjM/KlWDtAKxCtK94ggHxZ6pxOwZLqN7PEssI8FOK8zNdmTwUVLSoz81TBIfoLctWXfea9BURDhktnRMvlJNVFodgK7kpaBU5/i9Zggxqg3LryRdgQX/2R/xog0NOZXRjv3Y3GX/4PSNt1w0k=
 node_js:
 - '8'
 cache:
@@ -37,9 +37,11 @@ before_deploy:
   Browser.crust.config'; fi
 - echo $OUTPUT_PATH
 - printenv
-- echo $auth_token
-- if [[ "$NODE_ENV" == "prod" ]]; then TOKEN="$auth_token" OWNER="MaidSafe" REPO="release_config" REPO_PATH="safe_authenticator/safe_browser.crust.config" FILE="https://api.github.com/repos/$OWNER/$REPO/contents/$REPO_PATH"
-  curl --header 'Authorization:token $TOKEN' --header 'Accept:application/vnd.github.v3.raw' --location $FILE --output $OUTPUT_PATH; fi
+- echo $GITHUB_ACCESS_TOKEN
+- if [[ "$NODE_ENV" == "prod" ]]; then TOKEN="$GITHUB_ACCESS_TOKEN" OWNER="MaidSafe" REPO="release_config"
+  REPO_PATH="safe_authenticator/safe_browser.crust.config" FILE="https://api.github.com/repos/$OWNER/$REPO/contents/$REPO_PATH"
+  curl --header "Authorization:token $TOKEN" --header "Accept:application/vnd.github.v3.raw"
+  --output $OUTPUT_PATH $FILE; fi
 - if [[ "$NODE_ENV" == "dev" ]] && [[ "$TRAVIS_OS_NAME" == "osx"  ]]; then rm -f dist/$APP_PKG_DIR/'SAFE
   Browser.app'/Contents/Resources/'SAFE Browser.crust.config'; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cp build/log.toml dist/$APP_PKG_DIR/;
@@ -64,7 +66,7 @@ deploy:
   provider: releases
   skip_cleanup: true
   api_key:
-    secure: E7PzJv0w5NwpZ7WCxHuhPzqty1QVzR+kZ6PoZ2OODgPfyiAE+z/hIiN77GtaKFH1q1+jOLuVJwwGnTlcKuLVaxcmN0YGocWu+07opV7srfR7U/4G6PeBHke6wTwGRvdDgNZ6G/xoTNcYoJDTfeYRRyaf1lACoenGQEqHKCA3a7oL0oI1UOGUAvDbtiqNPwbDm2gqwT/TGXzIc1LIZrFm+DGfjq1Ngelz5+RgknatXDMLH3JZOkLdB3QCVmU/03ouHjcHgQuApsUk9Dkh+bbXvmdUyVnoEmV7DKcc0CrcSiDygIhcdEMD6C2eXoHBpfoGzXmLecOeUm0se2a35CdhJeUSbMOVh2kfq+0uexCqMq3K4xWH2TD7p2cshjf/nrk2YVkeYTmiTP0HfzEuWurZh+310M1MITjlfBmgzPvzTqPMDZKPqpKIYcTiJbyt2olFnL3Yhgo5Thayhb+DTumVsuJQZpOufRD0R/shNzojw9OSOZSzeRnS6fh5UL+P4kNNOXxm6lp7NQzJXyHLifErfA+DkJb/QtCLoAdSzf5iDifBZu9vPX2Sgl+Q5aGoywtulVk1HfckGgwcDtQLM4zoHuVg1TT2a/dfoFW1FSFQrd2AEEa8B9uQSOSyXjdJoTBUN+6TF3Zc0xhd2NOBc20EWUEXSgMgLtUwvc0dtFn0OXE=
+    secure: Ec2Q23NsZg4KCvfUgXLVCbthQ9zflnR/tkinPh/49YxoBErTGCBCUMRPOfcNwSsewZywdxqMc70iLK4hQH8n3413VoC3dY2CKBxMNMCv2QG29+qUZ/QbBHzdkWHF1zg8WMz4iPksZm1gN8syQ0NU8NwM5uKI0KqyVOn6uJq45oJNd3lycz9WQYb96utyIweJ2lCugEfmtq0m/FdItYi44yuPIL8aHsGXNEpxVmcaa+efzQ2xVlvwgUTKLBgCtWX1q6ynzs/C8vV4+T1Eao5KI4qNaZpB/Oh0lu5lvJ+FVMDtP0KhmEWMmO6rQleFNujDFI6JXcTg2WZ/WEPfCjI9NaDGWut1yBxeGRURHOFBBC+YrIYfgvMHfA86XgI0ewBXNLp7TKME46NEAIvOh3wwWUWismPDrMaVO9DRIzFvN1ypfnzlpABLC99hXjIIKD5KKbvn5ltxmEJAJywI5MPazEjsFUGiqb2MoHyorHOWDOvL4dQGVUCUvgMuwmN6EA8r/ZlFsymYBcIWieUAm2JZNIfEX0SjM/KlWDtAKxCtK94ggHxZ6pxOwZLqN7PEssI8FOK8zNdmTwUVLSoz81TBIfoLctWXfea9BURDhktnRMvlJNVFodgK7kpaBU5/i9Zggxqg3LryRdgQX/2R/xog0NOZXRjv3Y3GX/4PSNt1w0k=
   file:
   - "${RELEASE_DIR}"
   - "${SHA_256_SUM}"
