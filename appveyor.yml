@@ -63,7 +63,7 @@ deploy:
   description: 'SAFE Browser'
   provider: GitHub
   auth_token:
-    secure: yYDNGH+3V6HD/LemQHWRMtum9o98noPH8a02NFPJyuVKc+6vQWveTClb3+gRSnuB
+    secure: tE7HKcgf8ibx96F9Zy+MLyquQhuvVm+e6kvqVU2V3Aski41VJ41DhEUYgCM6jH2+
   draft: true
   prerelease: true
   on:
