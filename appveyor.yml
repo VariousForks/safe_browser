@@ -8,11 +8,11 @@ environment:
   access_token:
     secure: yYDNGH+3V6HD/LemQHWRMtum9o98noPH8a02NFPJyuVKc+6vQWveTClb3+gRSnuB
   matrix:
-    - NODE_ENV: "dev"
+    - NODE_ENV: "prod"
       win_runtime: win-x64
       arch: x64
       plat: win32
-    - NODE_ENV: "prod"
+    - NODE_ENV: "dev"
       win_runtime: win-x64
       arch: x64
       plat: win32
