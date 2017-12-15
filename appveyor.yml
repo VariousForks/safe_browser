@@ -23,7 +23,7 @@ install:
   - npm --version
   - yarn --version
   - yarn add windows-build-tools --global
-  - yarn --ignore-optional
+  - cmd: appveyor-retry yarn --ignore-optional
 
 
 build_script:
