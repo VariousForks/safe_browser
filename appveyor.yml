@@ -35,8 +35,6 @@ build_script:
 
 
 after_build:
-  - ps: >-
-      Get-ChildItem Env:
   - FOR /F %%i IN ('dir dist /b') DO SET APP_PKG_DIR=%%i
   - if [%NODE_ENV%]==[dev] (
       ren .\dist\%APP_PKG_DIR% mock-%APP_PKG_DIR%
@@ -52,7 +50,7 @@ after_build:
         $REPO_PATH="safe_authenticator/safe_browser.crust.config"
         $FILE="https://api.github.com/repos/$OWNER/$REPO/contents/$REPO_PATH"
         $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-        $headers.Add("Authorization", 'token $TOKEN')
+        $headers.Add("Authorization", "token $TOKEN")
         $headers.Add("Accept", 'application/vnd.github.v3.raw')
         Invoke-WebRequest -URI $FILE -Headers $headers -OutFile ".\dist\%APP_PKG_DIR%\safe-browser.crust.config"
       }
