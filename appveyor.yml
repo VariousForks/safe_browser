@@ -5,8 +5,6 @@ image: Visual Studio 2015
 
 environment:
   nodejs_version: "8"
-  access_token:
-    secure: w5UjE2A4PaayHCEBAQlGc6Vr3Jz5fbok03ymBIKAjWrAedK4CpsjzEJdQqiyzQTT
   matrix:
     - NODE_ENV: "prod"
       win_runtime: win-x64
@@ -44,7 +42,7 @@ after_build:
   - for /f %%H in ('dir dist\%APP_PKG_DIR%  /b') do echo %%H
   - ps: >-
       If ($env:NODE_ENV -Match "prod") {
-        $TOKEN="$env:access_token"
+        $TOKEN="$env:GITHUB_ACCESS_TOKEN"
         $OWNER="MaidSafe"
         $REPO="release_config"
         $REPO_PATH="safe_authenticator/safe_browser.crust.config"
@@ -76,8 +74,7 @@ deploy:
   tag: $(appveyor_repo_tag_name)
   description: 'SAFE Browser'
   provider: GitHub
-  auth_token:
-    secure: yYDNGH+3V6HD/LemQHWRMtum9o98noPH8a02NFPJyuVKc+6vQWveTClb3+gRSnuB
+  auth_token: $(GITHUB_ACCESS_TOKEN)
   draft: true
   prerelease: true
   on:
