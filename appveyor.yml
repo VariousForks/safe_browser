@@ -49,10 +49,11 @@ after_build:
         $REPO="release_config"
         $REPO_PATH="safe_authenticator/safe_browser.crust.config"
         $FILE="https://api.github.com/repos/$OWNER/$REPO/contents/$REPO_PATH"
+        $APP_DIR="$env:APP_PKG_DIR"
         $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
         $headers.Add("Authorization", "token $TOKEN")
         $headers.Add("Accept", 'application/vnd.github.v3.raw')
-        Invoke-WebRequest -URI $FILE -Headers $headers -OutFile ".\dist\%APP_PKG_DIR%\safe-browser.crust.config"
+        Invoke-WebRequest -URI $FILE -Headers $headers -OutFile ".\dist\$APP_DIR\safe-browser.crust.config"
       }
   - copy .\build\log.toml .\dist\%APP_PKG_DIR%\
   - ren .\dist\%APP_PKG_DIR%\"SAFE Browser.exe" safe-browser.exe
