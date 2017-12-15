@@ -5,7 +5,7 @@ image: Visual Studio 2015
 
 environment:
   nodejs_version: "8"
-  auth_token:
+  access_token:
     secure: yYDNGH+3V6HD/LemQHWRMtum9o98noPH8a02NFPJyuVKc+6vQWveTClb3+gRSnuB
   matrix:
     - NODE_ENV: "dev"
@@ -35,7 +35,7 @@ build_script:
 
 after_build:
   - ps: >-
-      Get-ChildItem Env:auth_token
+      Get-ChildItem Env:
   - FOR /F %%i IN ('dir dist /b') DO SET APP_PKG_DIR=%%i
   - if [%NODE_ENV%]==[dev] (
       ren .\dist\%APP_PKG_DIR% mock-%APP_PKG_DIR%
@@ -45,7 +45,7 @@ after_build:
   - for /f %%H in ('dir dist\%APP_PKG_DIR%  /b') do echo %%H
   - ps: >-
       If ($env:NODE_ENV -Match "prod") {
-        $TOKEN="$env:auth_token"
+        $TOKEN="$env:access_token"
         $OWNER="MaidSafe"
         $REPO="release_config"
         $REPO_PATH="safe_authenticator/safe_browser.crust.config"

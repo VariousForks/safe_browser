@@ -38,10 +38,17 @@ before_deploy:
 - echo $OUTPUT_PATH
 - printenv
 - echo $GITHUB_ACCESS_TOKEN
-- if [[ "$NODE_ENV" == "prod" ]]; then TOKEN="$GITHUB_ACCESS_TOKEN" OWNER="MaidSafe" REPO="release_config"
-  REPO_PATH="safe_authenticator/safe_browser.crust.config" FILE="https://api.github.com/repos/$OWNER/$REPO/contents/$REPO_PATH"
-  curl --header "Authorization:token $TOKEN" --header "Accept:application/vnd.github.v3.raw"
-  --output "$OUTPUT_PATH" $FILE; fi
+- export TOKEN="$GITHUB_ACCESS_TOKEN"
+- export OWNER="MaidSafe" REPO="release_config"
+- export REPO_PATH="safe_authenticator/safe_browser.crust.config"
+- export FILE="https://api.github.com/repos/$OWNER/$REPO/contents/$REPO_PATH"
+- echo $TOKEN
+- echo $OWNER
+- echo $REPO_PATH
+- echo $FILE
+- if [[ "$NODE_ENV" == "prod" ]]; then 
+  curl "$FILE" -H "Authorization:token $TOKEN" -H "Accept:application/vnd.github.v3.raw"
+  --output "$OUTPUT_PATH"; fi
 - if [[ "$NODE_ENV" == "dev" ]] && [[ "$TRAVIS_OS_NAME" == "osx"  ]]; then rm -f dist/$APP_PKG_DIR/'SAFE
   Browser.app'/Contents/Resources/'SAFE Browser.crust.config'; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cp build/log.toml dist/$APP_PKG_DIR/;
