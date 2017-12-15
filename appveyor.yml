@@ -6,7 +6,7 @@ image: Visual Studio 2015
 environment:
   nodejs_version: "8"
   access_token:
-    secure: yYDNGH+3V6HD/LemQHWRMtum9o98noPH8a02NFPJyuVKc+6vQWveTClb3+gRSnuB
+    secure: w5UjE2A4PaayHCEBAQlGc6Vr3Jz5fbok03ymBIKAjWrAedK4CpsjzEJdQqiyzQTT
   matrix:
     - NODE_ENV: "prod"
       win_runtime: win-x64
