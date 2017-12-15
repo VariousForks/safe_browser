@@ -22,9 +22,9 @@ install:
   - node --version
   - npm --version
   - yarn --version
-  - yarn add windows-build-tools --global
   - yarn config set child-concurrency 1
-  - yarn --ignore-optional
+  - yarn
+  - yarn add windows-build-tools --global
 
 
 build_script:
